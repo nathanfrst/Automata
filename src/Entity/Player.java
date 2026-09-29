@@ -3,40 +3,94 @@ package Entity;
 import Main.GamePanel;
 import Main.KeyHandler;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.IOException;
+import java.awt.image.BufferedImage;
 
 public class Player extends Entity {
 
-    GamePanel gp;
-    KeyHandler keyH;
+    private final GamePanel gp;
+    private final KeyHandler keyH;
 
-    public Player(GamePanel gp, KeyHandler keyH){
+    private int frameIndex = 0;
+    private int animationCounter = 0;
+    private boolean moving = false;
+
+    private static final int FRAME_WIDTH = 96;
+    private static final int FRAME_HEIGHT = 96;
+    private static final int FRAME_DELAY = 8; // atualiza o quadro a cada 8 updates
+
+    public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
 
         setDefaultvalues();
+        getPlayerImage();
     }
-    public void setDefaultvalues(){
 
+    public void setDefaultvalues() {
         x = 100;
         y = 100;
         speed = 4;
     }
-    public void update(){
-        if(keyH.spacePressed){
-            y -= speed;
-        }else if(keyH.downPressed){
-            y += speed;
-        }else if(keyH.leftPressed){
-            x -= speed;
-        }else if(keyH.rightPressed){
-            x += speed;
+
+    public void getPlayerImage() {
+        try {
+            BufferedImage sheet = ImageIO.read(
+                    getClass().getResourceAsStream("/player/RUN.png")
+            );
+
+            int frameCount = sheet.getWidth() / FRAME_WIDTH;
+            runFrames = new BufferedImage[frameCount];
+
+            for (int i = 0; i < frameCount; i++) {
+                runFrames[i] = sheet.getSubimage(
+                        i * FRAME_WIDTH, 0, FRAME_WIDTH, FRAME_HEIGHT
+                );
+            }
+        } catch (IOException | IllegalArgumentException e) {
+            e.printStackTrace();
         }
     }
-    public void draw(Graphics2D g2){
 
-        g2.setColor(Color.white);
-        g2.fillRect(x, y, gp.tileSize, gp.tileSize);
+    public void update() {
+        moving = false;
 
+        if (keyH.spacePressed) {
+            y -= speed;
+            moving = true;
+        } else if (keyH.downPressed) {
+            y += speed;
+            moving = true;
+        } else if (keyH.leftPressed) {
+            x -= speed;
+            moving = true;
+        } else if (keyH.rightPressed) {
+            x += speed;
+            moving = true;
+        }
+
+        if (moving && runFrames != null) {
+            animationCounter++;
+
+            if (animationCounter >= FRAME_DELAY) {
+                frameIndex = (frameIndex + 1) % runFrames.length;
+                animationCounter = 0;
+            }
+        } else {
+            frameIndex = 0;
+            animationCounter = 0;
+        }
+    }
+
+    public void draw(Graphics2D g2) {
+        if (runFrames != null && runFrames.length > 0) {
+            g2.drawImage(
+                    runFrames[frameIndex],
+                    x, y, gp.tileSize, gp.tileSize,
+                    null
+            );
+        }
     }
 }
