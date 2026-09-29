@@ -86,9 +86,14 @@ public class Player extends Entity {
 
     public void draw(Graphics2D g2) {
         if (runFrames != null && runFrames.length > 0) {
+            int drawSize = gp.tileSize * 3;
+
+            int drawX = (gp.screenWidth - drawSize) / 2;
+            int drawY = y - gp.tileSize * 2;
+
             g2.drawImage(
                     runFrames[frameIndex],
-                    x, y, gp.tileSize, gp.tileSize,
+                    drawX, drawY, drawSize, drawSize,
                     null
             );
         }

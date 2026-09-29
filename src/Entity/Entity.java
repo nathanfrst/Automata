@@ -12,4 +12,5 @@ public class Entity {
     public BufferedImage[] hurtFrames;
 
     public String direction = "right";
+
 }

@@ -14,10 +14,11 @@ public class GamePanel extends JPanel implements Runnable{
         public final int tileSize = originalTileSize * scale; //48x48
         final int maxScreenCol = 16;
         final int maxScreenRow = 12;
-        final int screenWidth = tileSize * maxScreenCol; // 768 pixels
+        public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
         final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+        public double cameraX;
 
-        int FPS = 60;
+        int FPS = 120;
 
         KeyHandler keyH = new KeyHandler();
         Thread gameThread;
@@ -78,9 +79,8 @@ public class GamePanel extends JPanel implements Runnable{
 
         }
         public void update(){
-
                player.update();
-
+               cameraX = player.x - screenWidth / 2.0;
         }
         public  void paintComponent(Graphics g){
 
