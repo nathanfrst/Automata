@@ -5,7 +5,7 @@ public class Main {
 
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(false);
+        window.setResizable(true);
         window.setTitle("Automata");
 
         GamePanel gamePanel = new GamePanel();
@@ -16,7 +16,7 @@ public class Main {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
-        gamePanel.starGameThread();
+        gamePanel.startGameThread();
 
 
     }
